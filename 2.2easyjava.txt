@@ -1,0 +1,36 @@
+import java.util.Scanner;
+
+public class SumOfIntegers {
+
+    // Method to calculate the sum of integers from an array of strings
+    public static int calculateSum(String[] stringNumbers) {
+        int sum = 0;
+        for (String str : stringNumbers) {
+            sum += Integer.parseInt(str); // Parse string to int and add to sum
+        }
+        return sum;
+    }
+
+    public static void main(String[] args) {
+        // Create a Scanner object to get input from the user
+        Scanner scanner = new Scanner(System.in);
+
+        // Ask the user to enter numbers separated by spaces
+        System.out.println("Enter numbers separated by spaces:");
+
+        // Read the entire line of input as a string
+        String input = scanner.nextLine();
+
+        // Split the input string into an array of strings using spaces as the delimiter
+        String[] stringNumbers = input.split(" ");
+
+        // Calculate the sum of the integers
+        int sum = calculateSum(stringNumbers);
+
+        // Print the sum
+        System.out.println("The sum of the integers is: " + sum);
+
+        // Close the scanner to avoid resource leaks
+        scanner.close();
+    }
+}

@@ -1,0 +1,99 @@
+import java.io.*;
+import java.util.*;
+
+class Employee implements Serializable {
+    private String name;
+    private int id;
+    private String designation;
+    private double salary;
+
+    // Constructor
+    public Employee(String name, int id, String designation, double salary) {
+        this.name = name;
+        this.id = id;
+        this.designation = designation;
+        this.salary = salary;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee ID: " + id + ", Name: " + name + ", Designation: " + designation + ", Salary: " + salary;
+    }
+}
+
+public class EmployeeManagement {
+
+    // Method to add an employee
+    public static void addEmployee(String filename) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Get employee details from user
+        System.out.print("Enter Employee Name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter Employee ID: ");
+        int id = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        System.out.print("Enter Designation: ");
+        String designation = scanner.nextLine();
+        System.out.print("Enter Salary: ");
+        double salary = scanner.nextDouble();
+
+        // Create Employee object
+        Employee employee = new Employee(name, id, designation, salary);
+
+        // Save employee to file
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename, true))) {
+            out.writeObject(employee); // Append the employee to the file
+            System.out.println("Employee added successfully!");
+        } catch (IOException e) {
+            System.out.println("Error saving employee: " + e.getMessage());
+        }
+    }
+
+    // Method to display all employees
+    public static void displayEmployees(String filename) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename))) {
+            System.out.println("\nEmployee Details:");
+            while (true) {
+                Employee employee = (Employee) in.readObject();
+                System.out.println(employee);
+            }
+        } catch (EOFException e) {
+            // Reached end of file
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error reading employee data: " + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String filename = "employees.ser";
+
+        // Menu loop
+        int option;
+        do {
+            System.out.println("\nEmployee Management System");
+            System.out.println("1. Add Employee");
+            System.out.println("2. Display All Employees");
+            System.out.println("3. Exit");
+            System.out.print("Choose an option: ");
+            option = scanner.nextInt();
+
+            switch (option) {
+                case 1:
+                    addEmployee(filename);
+                    break;
+                case 2:
+                    displayEmployees(filename);
+                    break;
+                case 3:
+                    System.out.println("Exiting the application...");
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
+        } while (option != 3);
+
+        scanner.close();
+    }
+}
